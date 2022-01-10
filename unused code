@@ -1,0 +1,50 @@
+for x in range(10):#golden saits
+    fallen_star = makeSprite('data/img/Golden Saint.png')
+    addSpriteImage(fallen_star, 'data/img/death coin.png')
+    fallen_star.x = random.randint(0,350) # w jakim miejscu sie spawnuje x
+    fallen_star.y = random.randint(400,450)  # w jakim miejscu sie spawnuje y
+    fallen_star.xspeed = random.randint(0,0)
+    fallen_star.yspeed = random.randint(0,0)
+    moveSprite(fallen_star, fallen_star.x, fallen_star.y, True)
+    showSprite(fallen_star)
+    enemies.append(fallen_star)
+
+for blade in range(10):#crab angels
+    killer = makeSprite('data/img/blade from thelma l 3.png')
+    addSpriteImage(killer, 'data/img/death coin.png')
+    deadkiller = makeSprite('data/img/crawler.png')
+    blade_hp = 100
+    transformSprite(killer, 90, 1)
+    killer.x = random.randint(300,510) # w jakim miejscu sie spawnuje x
+    killer.y = random.randint(-1000,10)  # w jakim miejscu sie spawnuje y
+    killer.xspeed = random.randint(0,0)
+    killer.yspeed = random.randint(1,1)
+    moveSprite(killer, killer.x, killer.y, True)
+    showSprite(killer)
+    enemies.append(killer)
+
+    for killer in enemies:
+        if touching(hero,killer):
+            hero_health = hero_health - 1
+            changeLabel(display_health, str(hero_health), hpcolor)
+            updateDisplay()
+
+            print('you have been hit by enemy -1hero_health')
+
+        if touching(hero_weapon,killer):
+            print(blade_hp)
+            if blade_hp > 0:
+                for killer in enemies:
+                    blade_hp -= hero_weapon_attack
+                    line(screen, 320, 400, 100, math.pi / 2)
+                    updateDisplay()
+                    for blade in range(random.randint(1, 2)):
+                        killer.xspeed = killer.xspeed + random.randint(-1, 1) / 20
+
+            else:
+                for blade in range(random.randint(1,2)):
+                    killer.xspeed = 0
+                    killer.yspeed = 0
+                    changeSpriteImage(killer, 1)
+
+                updateDisplay()
