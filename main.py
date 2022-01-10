@@ -7,13 +7,10 @@ from item_sprites import *
 from deathscreen import *
 from bosses import *
 
-
-
-
 # jak poruszac przeciwnikow wraz z backgroundem?
 # co zrobic, zeby sprite przestal istniec? mimo ze znika, kolizje dalej zachodza.
 
-
+setAutoUpdate(False)
 """
 przeciwnicy nie musza sie poruszac z backgroundem
 moga poruszac sie w wlasnych granicach, cos moze byc od 0, 10000 a cos moze byc (10000, 100000),
@@ -25,9 +22,11 @@ kompas tez bylby ok
 przeciwnicy mogli by sie spawnowac ddalej, i potem wieksi w jeszcze dalszym zakresie, i idac do przodu byloby ich wiecej, niektorzy by sie konczyli itp.
 
 """
+
 #drzewo
 dtheta = math.pi / 4
 ratio = 0.7
+
 
 
 def line(screen, x, y, len, theta):
@@ -54,7 +53,9 @@ crabs = []
 particles = []
 boss_score = 0
 
-for x in range(120):#boss
+bosses = []
+
+for x in range(40):#boss
     ronexadas = makeSprite('data/img/apparotion.png')
     addSpriteImage(ronexadas, 'data/img/death coin.png')
     transformSprite(ronexadas, 90, 1)
@@ -69,7 +70,8 @@ for x in range(120):#boss
     showSprite(ronexadas)
     pg.draw.rect(screen, (255,255,255),(ronexadas.x , ronexadas.y + 15, 30,10))
     bosses.append(ronexadas)
-
+    boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10,
+                              12)
 for x in range(10):#golden saits
     fallen_star = makeSprite('data/img/Golden Saint.png')
     addSpriteImage(fallen_star, 'data/img/death coin.png')
@@ -93,10 +95,8 @@ for blade in range(10):#crab angels
     killer.yspeed = random.randint(1,1)
     moveSprite(killer, killer.x, killer.y, True)
     showSprite(killer)
-
-
-
     enemies.append(killer)
+#tego nie da sie przerzucic do innych plikow
 
 
 for x in range(5):#hpboosts
@@ -149,6 +149,7 @@ while True:
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
         hero_weapon.y == hero_weapon.ybasic
         hero_weapon.y += hero_weapon.yspeed - 5
+
 
     elif keyPressed("down") and keyPressed("c"):
         showSprite(hero_weapon)
@@ -232,8 +233,16 @@ while True:
             changeSpriteImage(killer, 1)
             boss_score += -1
             print('boss score' + str(boss_score))
+            boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10,
+                                      12)
+            showTextBox(boss_damage)
+
+            #hideTextBox(boss_damage)
             #ronexadas.xspeed = 0
             #ronexadas.yspeed = 0
+
+
+
         if touching(hero_weapon, ronexadas):
             print('you have hit by enemy- it dies')
             print(ronexadas_hp)
@@ -313,7 +322,7 @@ while True:
     #tworzy efekt przy broni
     for particle in particles:
         particle[0][0] += particle[1][0]
-        particle[0][1] += particle[1][1]
+        particle[1][1] += particle[1][1]
         particle[2] -= 0.2
         pg.draw.circle(screen, (255, 0, 10), [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
         if particle[2] <= 0:

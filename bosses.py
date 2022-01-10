@@ -6,10 +6,8 @@ from hud import *
 from pygame.locals import *
 from item_sprites import *
 from deathscreen import *
-from main import *
+
 
 
 #ronexadas, powerful psychic apparition
-boss.yspeed
-boss.xpeed
 
