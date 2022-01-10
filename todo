@@ -1,10 +1,25 @@
+ZROBIONE
+hud
+hp - WYSWIETLA HP, DZIALA
+mana- WYSWIETLA MANA
+
+obejrzec 3 filmiki od klas
+ten ze sprite i takie tam
+I OBEJRZYJ PYGAME FUNCTIONS JESZCZE RAZ
+potem obejrzec kod pygame functions, skomentowac caly kod
+
+SPISZ BŁEDY
+PRZEMIEN RONEXADASA NA ZWYKLEGO ENEMY
+
 zrobic 2 klasy bohaterow - do wyoru w submenu lub w samej grze
 maja rozne hp, predkoscin i granice atakow
 
+zrobic jednych przeciwnikow, reszte wyjebac dla cleara
+zostawic hpboost
 
-hud
-hp
-mana
+
+
+
 ilosc dusz
 dostepnosc broni
 area of effect attacks

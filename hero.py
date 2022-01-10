@@ -32,18 +32,3 @@ hero_weapon.yspeed = 0
 hero_weapon_attack = random.randint(5,20)
 moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
 
-class Bullet(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__()
-        self.magic = makeSprite('data/img/scalony.png')
-        self.magic.x = 400
-        self.magic.y = 340
-    def create_bullet(self):
-        return Bullet(xpos,ypos)
-    def update(self):
-        self.rect.y += 10
-
-bullet = Bullet(xpos, ypos)
-
-
-bullet_group = pg.sprite.Group()

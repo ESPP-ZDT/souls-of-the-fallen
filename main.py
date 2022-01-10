@@ -5,30 +5,15 @@ from hud import *
 from pygame.locals import *
 from item_sprites import *
 from deathscreen import *
-from bosses import *
-
-# jak poruszac przeciwnikow wraz z backgroundem?
-# co zrobic, zeby sprite przestal istniec? mimo ze znika, kolizje dalej zachodza.
 
 setAutoUpdate(False)
-"""
-przeciwnicy nie musza sie poruszac z backgroundem
-moga poruszac sie w wlasnych granicach, cos moze byc od 0, 10000 a cos moze byc (10000, 100000),
-do tego wystarczajaca duzy background,
-przedmioty ktore beda losowo sie pojawiac ale nie beda sie ruszac, i bedzie sie na nich blokowac bohater
-np krzesla ***** 
-moglbys teoretycznie zorbic wioske, gdzies na koordynatach porostu porozstawiac, a potem przesunac gdzies daleko
-kompas tez bylby ok
-przeciwnicy mogli by sie spawnowac ddalej, i potem wieksi w jeszcze dalszym zakresie, i idac do przodu byloby ich wiecej, niektorzy by sie konczyli itp.
 
-"""
 
 #drzewo
 dtheta = math.pi / 4
 ratio = 0.7
 
-
-
+#fraktal
 def line(screen, x, y, len, theta):
     if (len >= 1):
         x2 = int(x - len * math.cos(theta))
@@ -37,23 +22,11 @@ def line(screen, x, y, len, theta):
         line(screen, x2, y2, len * ratio, theta - dtheta)
         line(screen, x2, y2, len * ratio, theta + dtheta)
 
-
-#reset
-#reward
-#play (action) - zwraca kierunek
-#sprawdza klatke, iteracje gry
-#prawdza if touching
-#dla kierunku uzyje bossx i bossy zwiazany z bosem,
-#dla tego co nie ma dotykac uzywam return? hero weaponx i y
-#dla tego co chce dotykac uzywam hero xpos i ypos
-bosses = []
 enemies = []
 healing =[]
-crabs = []
 particles = []
 boss_score = 0
 
-bosses = []
 
 for x in range(40):#boss
     ronexadas = makeSprite('data/img/apparotion.png')
@@ -69,36 +42,10 @@ for x in range(40):#boss
     min_dist = 1000
     showSprite(ronexadas)
     pg.draw.rect(screen, (255,255,255),(ronexadas.x , ronexadas.y + 15, 30,10))
-    bosses.append(ronexadas)
+    enemies.append(ronexadas)
     boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10,
                               12)
-for x in range(10):#golden saits
-    fallen_star = makeSprite('data/img/Golden Saint.png')
-    addSpriteImage(fallen_star, 'data/img/death coin.png')
-    fallen_star.x = random.randint(0,350) # w jakim miejscu sie spawnuje x
-    fallen_star.y = random.randint(400,450)  # w jakim miejscu sie spawnuje y
-    fallen_star.xspeed = random.randint(0,0)
-    fallen_star.yspeed = random.randint(0,0)
-    moveSprite(fallen_star, fallen_star.x, fallen_star.y, True)
-    showSprite(fallen_star)
-    enemies.append(fallen_star)
-
-for blade in range(10):#crab angels
-    killer = makeSprite('data/img/blade from thelma l 3.png')
-    addSpriteImage(killer, 'data/img/death coin.png')
-    deadkiller = makeSprite('data/img/crawler.png')
-    blade_hp = 100
-    transformSprite(killer, 90, 1)
-    killer.x = random.randint(300,510) # w jakim miejscu sie spawnuje x
-    killer.y = random.randint(-1000,10)  # w jakim miejscu sie spawnuje y
-    killer.xspeed = random.randint(0,0)
-    killer.yspeed = random.randint(1,1)
-    moveSprite(killer, killer.x, killer.y, True)
-    showSprite(killer)
-    enemies.append(killer)
 #tego nie da sie przerzucic do innych plikow
-
-
 for x in range(5):#hpboosts
     hpboost = makeSprite('data/img/crhvn lamp.png')
     transformSprite(hpboost, 90, 1)
@@ -140,7 +87,6 @@ while True:
         changeLabel(display_mana, str(mana), manacolor)
         line(screen, WIDTH / 2, HEIGHT, 10, math.pi / 2)
         fractal = line
-        bullet_group.add(bullet.create_bullet())
     elif keyPressed("space") and mana == 0:
         print('no mana')
 #atak
@@ -150,7 +96,6 @@ while True:
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
         hero_weapon.y == hero_weapon.ybasic
         hero_weapon.y += hero_weapon.yspeed - 5
-
 
     elif keyPressed("down") and keyPressed("c"):
         showSprite(hero_weapon)
@@ -177,31 +122,7 @@ while True:
         killSprite(hero_weapon)
         updateDisplay()
 
-    for killer in enemies:
-        if touching(hero,killer):
-            hero_health = hero_health - 1
-            changeLabel(display_health, str(hero_health), hpcolor)
-            updateDisplay()
 
-            print('you have been hit by enemy -1hero_health')
-
-        if touching(hero_weapon,killer):
-            print(blade_hp)
-            if blade_hp > 0:
-                for killer in enemies:
-                    blade_hp -= hero_weapon_attack
-                    line(screen, 320, 400, 100, math.pi / 2)
-                    updateDisplay()
-                    for blade in range(random.randint(1, 2)):
-                        killer.xspeed = killer.xspeed + random.randint(-1, 1) / 20
-
-            else:
-                for blade in range(random.randint(1,2)):
-                    killer.xspeed = 0
-                    killer.yspeed = 0
-                    changeSpriteImage(killer, 1)
-
-                updateDisplay()
     updateDisplay()
     #hpboost
     for hpboost in healing:
@@ -213,7 +134,7 @@ while True:
             killSprite(hpboost)
             healing.remove(hpboost)
 #ronexadas collisions
-    for ronexadas in bosses:
+    for ronexadas in enemies:
         if touching(hero,ronexadas):
             if ronexadas_hp > 0:
                 hero_health = hero_health - 1
@@ -226,12 +147,10 @@ while True:
             if ronexadas_hp < 0:
                 ronexadas_speed = 0
                 killSprite(ronexadas)
-
-
         if touching(hero_weapon,ronexadas):
             print('you have hit by enemy- it dies')
             ronexadas_hp = ronexadas_hp - hero_weapon_attack
-            changeSpriteImage(killer, 1)
+            changeSpriteImage(ronexadas, 1)
             boss_score += -1
             print('boss score' + str(boss_score))
             boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10,
@@ -241,9 +160,6 @@ while True:
             #hideTextBox(boss_damage)
             #ronexadas.xspeed = 0
             #ronexadas.yspeed = 0
-
-
-
         if touching(hero_weapon, ronexadas):
             print('you have hit by enemy- it dies')
             print(ronexadas_hp)
@@ -251,7 +167,6 @@ while True:
                 ronexadas_hp -= hero_weapon_attack
 
                 updateDisplay()
-
             else:
 
                 changeSpriteImage(ronexadas, 1)
@@ -267,9 +182,6 @@ while True:
         for enemy in enemies:
             enemy.y  = enemy.y + 10
             moveSprite(enemy, enemy.x, enemy.y, True)
-        for boss in bosses:
-            boss.y  = boss.y + 10
-            moveSprite(boss, boss.x, boss.y, True)
         for hpboost in healing:
             hpboost.y = hpboost.y + 10
             moveSprite(hpboost, hpboost.x, hpboost.y, True)
@@ -279,9 +191,6 @@ while True:
         changeSpriteImage(hero, 0)
         transformSprite(hero, 360, 1)
         scrollBackground(0,-10)
-        for boss in bosses:
-            boss.y  = boss.y -10
-            moveSprite(boss, boss.x, boss.y, True)
         for enemy in enemies:
             enemy.y  = enemy.y - 10
             moveSprite(enemy, enemy.x, enemy.y, True)
@@ -292,11 +201,8 @@ while True:
         changeSpriteImage(hero, 0)
         transformSprite(hero, -90, 1)
         scrollBackground(-10, 0)
-        for boss in bosses:
-            boss.x  = boss.x -10
-            moveSprite(boss, boss.x, boss.y, True)
         for enemy in enemies:
-            enemy.x  = enemy.x - 10
+            enemy.x = enemy.x - 10
             moveSprite(enemy, enemy.x, enemy.y, True)
         for hpboost in healing:
             hpboost.x = hpboost.x - 10
@@ -306,10 +212,6 @@ while True:
         transformSprite(hero, 90, 1)
         #xspeed -= 2
         scrollBackground(10, 0)
-        moveSprite(killer,-5,0)
-        for boss in bosses:
-            boss.x  = boss.x +10
-            moveSprite(boss, boss.x, boss.y, True)
         for enemy in enemies:
             enemy.x  = enemy.x + 10
             moveSprite(enemy, enemy.x, enemy.y, True)
@@ -320,6 +222,7 @@ while True:
     moveSprite(hero, xpos, ypos, True)#hero movement
     #efekt przy ruchu broni
     particles.append([[hero_weapon.x, hero_weapon.y], [random.randint(0, 20) / 10 - 1, -2], random.randint(2, 3)])
+
     #tworzy efekt przy broni
     for particle in particles:
         particle[0][0] += particle[1][0]
@@ -331,12 +234,7 @@ while True:
 
     updateDisplay()
     #ruch potworow, bossow np if heropos jest blisko costam, wtedy:
-    for enemy in enemies:
-        enemy.x += killer.xspeed
-        enemy.y += killer.yspeed
 
-
-        moveSprite(enemy, enemy.x, enemy.y, True)
     def getheroypos():
         return int(ypos)
     def getheroxpos():
@@ -371,16 +269,7 @@ while True:
         showSprite(endscreen)
         break
 
-
-    bullet_group.draw(screen)
-    bullet_group.update()
-
-
     tick(60)
-    #print(getronxpos)
-    #print(getronypos)
-    #print(getheroxpos)
-    #print(getheroypos)
     updateDisplay()
 
 endWait()
