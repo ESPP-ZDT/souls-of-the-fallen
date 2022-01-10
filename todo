@@ -1,3 +1,7 @@
+zrobic 2 klasy bohaterow - do wyoru w submenu lub w samej grze
+maja rozne hp, predkoscin i granice atakow
+
+
 hud
 hp
 mana
@@ -18,6 +22,7 @@ healthbar potwora jest w  kidscancode
 
 w piagecie w textoutput jest healthbar kinda taki tekstowy
 
+LINKA KTORA BY PRZYCIAGALA BOHATERA DO POTWOROW
 bron
 statystyki broni 
 kaklulacja statystyk przy kolizjach

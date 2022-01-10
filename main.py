@@ -140,6 +140,7 @@ while True:
         changeLabel(display_mana, str(mana), manacolor)
         line(screen, WIDTH / 2, HEIGHT, 10, math.pi / 2)
         fractal = line
+        bullet_group.add(bullet.create_bullet())
     elif keyPressed("space") and mana == 0:
         print('no mana')
 #atak
@@ -371,15 +372,15 @@ while True:
         break
 
 
-
-
+    bullet_group.draw(screen)
+    bullet_group.update()
 
 
     tick(60)
-    print(getronxpos)
-    print(getronypos)
-    print(getheroxpos)
-    print(getheroypos)
+    #print(getronxpos)
+    #print(getronypos)
+    #print(getheroxpos)
+    #print(getheroypos)
     updateDisplay()
 
 endWait()
