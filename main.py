@@ -40,9 +40,9 @@ for x in range(40):#boss
     min_dist = 1000
     showSprite(ronexadas)
     #pg.draw.rect(screen, (255,255,255),(ronexadas.x , ronexadas.y + 15, 30,10))
+
     enemies.append(ronexadas)
-    boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10,
-                              12)
+
 #tego nie da sie przerzucic do innych plikow
 for x in range(5):#hpboosts
     hpboost = makeSprite('data/img/crhvn lamp.png')
@@ -56,6 +56,14 @@ for x in range(5):#hpboosts
     healing.append(hpboost)
 
 while True:
+    for particle in particles:
+        particle[0][0] += particle[1][0]
+        particle[1][1] += particle[1][1]
+        particle[2] -= 0.2
+        pg.draw.circle(screen, (255, 0, 10), [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
+        if particle[2] <= 0:
+            particles.remove(particle)
+
 
     #soul
     if keyPressed("x") and souls > 0:
@@ -91,25 +99,25 @@ while True:
         showSprite(hero_weapon)
         hero_weapon.yspeed = random.randint(-20,-1)
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
-        #hero_weapon.y == hero_weapon.ybasic
+        hero_weapon.y == hero_weapon.ybasic
         hero_weapon.y += hero_weapon.yspeed - 5
     elif keyPressed("down") and keyPressed("c"):
         showSprite(hero_weapon)
         hero_weapon.yspeed = random.randint(1,20)
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
-        #hero_weapon.y == hero_weapon.ybasicatdown
+        hero_weapon.y == hero_weapon.ybasicatdown
         hero_weapon.y += hero_weapon.yspeed + 5
     elif keyPressed("right") and keyPressed("c"):
         showSprite(hero_weapon)
         hero_weapon.xspeed = random.randint(1, 20)
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
-        #hero_weapon.x == hero_weapon.xbasic
+        hero_weapon.x == hero_weapon.xbasic
         hero_weapon.x += hero_weapon.xspeed + 5
     elif keyPressed("left") and keyPressed("c"):
         showSprite(hero_weapon)
         hero_weapon.xspeed = random.randint(-20,-1)
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
-        #hero_weapon.x == hero_weapon.xbasic
+        hero_weapon.x == hero_weapon.xbasic
         hero_weapon.x += hero_weapon.xspeed - 5
     else:
         hero_weapon.x = hero_weapon.xbasic
@@ -138,39 +146,25 @@ while True:
                 changeLabel(display_health, str(hero_health), hpcolor)
                 print('you have been hit by enemy -1hero_health')
             updateDisplay()
-            if ronexadas_hp < 0:
+            if ronexadas_hp <= 0:
                 ronexadas_speed = 0
                 killSprite(ronexadas)
                 enemies.remove(ronexadas)
+                hideTextBox(boss_damage)
 
-        if touching(hero_weapon,ronexadas):
-            print('you have hit by enemy- it dies')
-            ronexadas_hp = ronexadas_hp - hero_weapon_attack
-            #changeSpriteImage(ronexadas, 1)
-            boss_score += -1
-            print('boss score' + str(boss_score))
-            boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10,
-                                      12)
-            showTextBox(boss_damage)
-        #else:
-            #hideTextBox(boss_damage)
-
-            #hideTextBox(boss_damage)
-            #ronexadas.xspeed = 0
-            #ronexadas.yspeed = 0
         if touching(hero_weapon, ronexadas):
-            print('you have hit by enemy- it dies')
-            print(ronexadas_hp)
             if ronexadas_hp > 0:
                 ronexadas_hp -= hero_weapon_attack
-
+                boss_score += -1
+                boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10, 12)
+                showTextBox(boss_damage)
                 updateDisplay()
             else:
-
                 changeSpriteImage(ronexadas, 1)
-                ronexadas.xspeed = 0
-                ronexadas.yspeed = 0
-                updateDisplay()
+                ronexadas.xspeed = 0# to nie dziala
+                ronexadas.yspeed = 0#to nie dziala
+                #updateDisplay()
+                #problem jest taki ze jak zabije jednego enemy, ruszaja sie dalej, zabijajac dalej trawiam na takiego, ktory sprawia ze przestaja sie ruszac
 
 #basic hero movement and keys
     if keyPressed("up"):
@@ -215,19 +209,11 @@ while True:
         for hpboost in healing:
             hpboost.x  = hpboost.x + 10
             moveSprite(hpboost, hpboost.x, hpboost.y, True)
-
     moveSprite(hero, xpos, ypos, True)#hero movement
     #efekt przy ruchu broni
     particles.append([[hero_weapon.x, hero_weapon.y], [random.randint(0, 20) / 10 - 1, -2], random.randint(2, 3)])
 
     #tworzy efekt przy broni
-    for particle in particles:
-        particle[0][0] += particle[1][0]
-        particle[1][1] += particle[1][1]
-        particle[2] -= 0.2
-        pg.draw.circle(screen, (255, 0, 10), [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
-        if particle[2] <= 0:
-            particles.remove(particle)
 
     updateDisplay()
     #ruch potworow, bossow np if heropos jest blisko costam, wtedy:
