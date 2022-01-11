@@ -7,7 +7,6 @@ from deathscreen import *
 
 #setAutoUpdate(False)
 
-
 #drzewo
 dtheta = math.pi / 4
 ratio = 0.7
