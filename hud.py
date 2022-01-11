@@ -21,3 +21,4 @@ def huddisplay():
     showLabel(display_souls)
     showLabel(display_manapotions)
 
+

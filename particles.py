@@ -1,7 +1,0 @@
-
-
-
-# loc, velocity, timer
-
-
-

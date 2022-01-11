@@ -3,10 +3,9 @@ from pygame_functions import *
 from settings import *
 from hud import *
 from pygame.locals import *
-from item_sprites import *
 from deathscreen import *
 
-setAutoUpdate(False)
+#setAutoUpdate(False)
 
 
 #drzewo
@@ -35,13 +34,13 @@ for x in range(40):#boss
     ronexadas_hp = 1000
     ronexadas.x = random.randint(380, 700) # w jakim miejscu sie spawnuje x
     ronexadas.y = random.randint(-3000, -1000) # w jakim miejscu sie spawnuje y
-    ronexadas.xspeed = random.randint(1,2)/21
-    ronexadas.yspeed = random.randint(1,3)/21
-    ronexadas_speed =3
-    moveSprite(ronexadas, ronexadas.x, ronexadas.y, True)
+    ronexadas.xspeed = random.randint(1,2)/2
+    ronexadas.yspeed = random.randint(1,3)/2
+    ronexadas_speed = 3
+    moveSprite(ronexadas, ronexadas.x, ronexadas.y, True)#to musi zostac
     min_dist = 1000
     showSprite(ronexadas)
-    pg.draw.rect(screen, (255,255,255),(ronexadas.x , ronexadas.y + 15, 30,10))
+    #pg.draw.rect(screen, (255,255,255),(ronexadas.x , ronexadas.y + 15, 30,10))
     enemies.append(ronexadas)
     boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10,
                               12)
@@ -49,7 +48,6 @@ for x in range(40):#boss
 for x in range(5):#hpboosts
     hpboost = makeSprite('data/img/crhvn lamp.png')
     transformSprite(hpboost, 90, 1)
-    addSpriteImage(hpboost, 'data/img/crhvnchair.png')
     hpboost.x = random.randint(1,300) # w jakim miejscu sie spawnuje x
     hpboost.y = random.randint(1,200)  # w jakim miejscu sie spawnuje y
     hpboost.xspeed = random.randint(0,0)
@@ -59,10 +57,10 @@ for x in range(5):#hpboosts
     healing.append(hpboost)
 
 while True:
-    huddisplay()
+
     #soul
     if keyPressed("x") and souls > 0:
-        souls = souls - 1
+        souls -= 1
         hero_health = hero_health + 100
         mana = mana + 100
         print(' used soul ' +' mana '+ str(mana)+ ' hero_health ' + str(hero_health))
@@ -72,7 +70,7 @@ while True:
         changeLabel(display_souls, str(souls), soulscolor)
     #mana potion
     if keyPressed("z") and mana_potions > 0:
-        mana_potions = -1
+        mana_potions -= 1
         mana = mana + 50
         # display manachange
         changeLabel(display_mana, str(mana), manacolor)
@@ -94,26 +92,25 @@ while True:
         showSprite(hero_weapon)
         hero_weapon.yspeed = random.randint(-20,-1)
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
-        hero_weapon.y == hero_weapon.ybasic
+        #hero_weapon.y == hero_weapon.ybasic
         hero_weapon.y += hero_weapon.yspeed - 5
-
     elif keyPressed("down") and keyPressed("c"):
         showSprite(hero_weapon)
         hero_weapon.yspeed = random.randint(1,20)
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
-        hero_weapon.y == hero_weapon.ybasicatdown
+        #hero_weapon.y == hero_weapon.ybasicatdown
         hero_weapon.y += hero_weapon.yspeed + 5
     elif keyPressed("right") and keyPressed("c"):
         showSprite(hero_weapon)
         hero_weapon.xspeed = random.randint(1, 20)
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
-        hero_weapon.x == hero_weapon.xbasic
+        #hero_weapon.x == hero_weapon.xbasic
         hero_weapon.x += hero_weapon.xspeed + 5
     elif keyPressed("left") and keyPressed("c"):
         showSprite(hero_weapon)
         hero_weapon.xspeed = random.randint(-20,-1)
         moveSprite(hero_weapon, hero_weapon.x, hero_weapon.y, True)
-        hero_weapon.x == hero_weapon.xbasic
+        #hero_weapon.x == hero_weapon.xbasic
         hero_weapon.x += hero_weapon.xspeed - 5
     else:
         hero_weapon.x = hero_weapon.xbasic
@@ -121,7 +118,6 @@ while True:
         moveSprite(hero_weapon, hero_weapon.xbasic, hero_weapon.ybasic, True)
         killSprite(hero_weapon)
         updateDisplay()
-
 
     updateDisplay()
     #hpboost
@@ -142,20 +138,23 @@ while True:
                 print('boss score'+str(boss_score))
                 changeLabel(display_health, str(hero_health), hpcolor)
                 print('you have been hit by enemy -1hero_health')
-
             updateDisplay()
             if ronexadas_hp < 0:
                 ronexadas_speed = 0
                 killSprite(ronexadas)
+                enemies.remove(ronexadas)
+
         if touching(hero_weapon,ronexadas):
             print('you have hit by enemy- it dies')
             ronexadas_hp = ronexadas_hp - hero_weapon_attack
-            changeSpriteImage(ronexadas, 1)
+            #changeSpriteImage(ronexadas, 1)
             boss_score += -1
             print('boss score' + str(boss_score))
             boss_damage = makeTextBox(ronexadas.x, ronexadas.y + 10, 40, 0, str(ronexadas_hp), 10,
                                       12)
             showTextBox(boss_damage)
+        #else:
+            #hideTextBox(boss_damage)
 
             #hideTextBox(boss_damage)
             #ronexadas.xspeed = 0
@@ -185,7 +184,6 @@ while True:
         for hpboost in healing:
             hpboost.y = hpboost.y + 10
             moveSprite(hpboost, hpboost.x, hpboost.y, True)
-
             updateDisplay()
     elif keyPressed("down"):
         changeSpriteImage(hero, 0)
@@ -244,7 +242,7 @@ while True:
     def getronypos():
         return int(ronexadas.y)
 
-    for boss in bosses:
+    for boss in enemies:
         boss.x += ronexadas.xspeed
         boss.y += ronexadas.yspeed
         delta_x = getheroxpos() - getronxpos()
@@ -261,14 +259,14 @@ while True:
 
         moveSprite(boss, boss.x, boss.y, True)
     #game over, tylko czasem dziala
-    if hero_health == 0:
+    if hero_health <= 0:
         changeSpriteImage(hero, 1)
         yspeed = 0
         lifestatus = False
         print('game over')
         showSprite(endscreen)
         break
-
+    huddisplay()
     tick(60)
     updateDisplay()
 

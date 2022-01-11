@@ -3,6 +3,7 @@ hud
 hp - WYSWIETLA HP, DZIALA
 mana- WYSWIETLA MANA
 
+hud display powinien wszyskto zbierac i wyswietlac na koncu, a nie przy ifach
 obejrzec 3 filmiki od klas
 ten ze sprite i takie tam
 I OBEJRZYJ PYGAME FUNCTIONS JESZCZE RAZ

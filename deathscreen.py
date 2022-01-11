@@ -4,7 +4,6 @@ from settings import *
 from hero import *
 from hud import *
 from pygame.locals import *
-from item_sprites import *
 from deathscreen import *
 
 endscreen = makeSprite('data/img/sofh sky.png')
